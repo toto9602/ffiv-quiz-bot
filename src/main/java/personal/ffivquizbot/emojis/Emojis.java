@@ -13,7 +13,11 @@ public enum Emojis {
     ROCKET(":rocket:"),
     CLOCK(":alarm_clock:"),
     CLAP(":clap:"),
-    SMILING_TEAR(":smiling_face_with_tear:");
+    SMILING_TEAR(":smiling_face_with_tear:"),
+    HAND(":hand_splayed:"),
+    SMILEY(":smiley:"),
+    SLIGHT_SMILE(":slight_smile:"),
+    PARTYING_FACE(":partying_face:");
 
     private final String emojiString;
 

@@ -87,15 +87,16 @@ public class JobQuestionCommandHandler implements SlashCommandHandler {
 
                                             targetChannel.sendMessage("정답입니다!!! " + Emojis.CLAP.getEmojiString() + " "  + Emojis.CLAP.getEmojiString()).queue();
 
+                                            int updatedCorrectCount = correctCount + 1;
+
                                             if (!isLast(jobIndex, total)) {
                                                 log.info("문제가 남았습니다! 다음 문제를 출제합니다.");
                                                 int updatedJobIndex = jobIndex + 1;
-                                                int updatedCorrectCount = correctCount + 1;
 
                                                 processJobQuestion(targetChannel, targetUser, jobs, updatedJobIndex, total, updatedCorrectCount);
                                             } else {
                                                 // 출제 끝
-                                                targetChannel.sendMessage("수고하셨습니다!! " + Emojis.CLAP.getEmojiString() + " " + Emojis.CLAP.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(correctCount, total)).queue();
+                                                targetChannel.sendMessage("\n\n" + Emojis.PARTYING_FACE.getEmojiString() + " 모든 문제가 끝났습니다! " + Emojis.PARTYING_FACE.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(updatedCorrectCount, total)).queue();
                                             }
                                         } else { // 오답
                                             targetChannel.sendMessage("땡~! " + Emojis.WOMAN_X.getEmojiString() + " " + Emojis.WOMAN_X.getEmojiString() + " " + "정답은 [ " + jobToAsk.getJobName() + " ] 입니다!").queue();
@@ -107,7 +108,7 @@ public class JobQuestionCommandHandler implements SlashCommandHandler {
                                                 processJobQuestion(targetChannel, targetUser, jobs, updatedJobIndex, total, correctCount);
                                             } else {
                                                 // 출제 끝
-                                                targetChannel.sendMessage("수고하셨습니다!! 정답률 : " + getCorrectRate(correctCount, total)).queue();
+                                                targetChannel.sendMessage("\n\n" + Emojis.PARTYING_FACE.getEmojiString() + " 모든 문제가 끝났습니다! " + Emojis.PARTYING_FACE.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(correctCount, total)).queue();
                                             }
                                         }
                                         },
