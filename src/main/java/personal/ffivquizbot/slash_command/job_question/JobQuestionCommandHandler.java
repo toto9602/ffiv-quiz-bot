@@ -40,7 +40,7 @@ public class JobQuestionCommandHandler implements SlashCommandHandler {
 
         String jobQuestionReply = "[ 잡 ] 관련 문제를 " +
                 questionCount +
-                "개 출제할게요! 5초 뒤 시작합니다!" + Emojis.ROCKET.getEmojiString() + " " + Emojis.ROCKET.getEmojiString();
+                "개 출제할게요!\n 5초 뒤 시작합니다!" + Emojis.ROCKET.getEmojiString() + " " + Emojis.ROCKET.getEmojiString();
 
 
         event.reply(jobQuestionReply).queue();
