@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Getter
