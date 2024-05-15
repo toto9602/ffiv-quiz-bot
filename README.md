@@ -15,6 +15,8 @@ Last Updated : 2024.05.10
 ### /잡 {questionCount}
 - FF-IV 인게임 내 [ 잡 ] 관련 문항을 questionCount 개만큼 출제합니다.
 
+### 중단!
+- 진행 중이던 문제 풀이를 즉시 중단합니다.
 ## Core Dependencies
 
 - JDA : 5.0.0-alpha.11
