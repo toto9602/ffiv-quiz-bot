@@ -28,10 +28,6 @@ public class JobQuestionCommandHandler extends BaseSlashCommandHandler implement
 
     private final EventWaiterProvider eventWaiterProvider;
 
-    public SlashCommands getCommand() {
-        return SlashCommands.JOB_QUESTION;
-    }
-
     public void handleCommand(SlashCommandInteractionEvent event) {
         OptionMapping questionCountOption = event.getOption("question_count");
         int questionCount = questionCountOption != null ? questionCountOption.getAsInt() : 19;
