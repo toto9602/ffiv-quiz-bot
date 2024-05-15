@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import personal.ffivquizbot.slash_command.introduction.IntroductionCommandHandler;
 import personal.ffivquizbot.slash_command.job_question.JobQuestionCommandHandler;
 
-@Component
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class SlashCommandListener extends ListenerAdapter {
@@ -21,15 +24,12 @@ public class SlashCommandListener extends ListenerAdapter {
 
         String name = event.getName();
 
-        log.info("/ 커맨드를 실행합니다., 커맨드 이름 = {}", name);
+        SlashCommandHandler targetCommandHandler = Arrays.asList(jobQuestionCommandHandler, introductionCommandHandler).stream()
+                .filter(slashCommandHandler -> slashCommandHandler.getCommand().getCommandName().equals(name))
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
 
-        if (name.equals(SlashCommands.JOB_QUESTION.getCommandName())) {
-            jobQuestionCommandHandler.handleCommand(event);
-        } else if (name.equals(SlashCommands.INTRODUCTION.getCommandName())) {
-            introductionCommandHandler.handleCommand(event);
-        } else {
-            log.error("유효하지 않은 커맨드입니다, 커맨드 이름 = {}", name);
-            throw new IllegalArgumentException(name);
-        }
+        log.info("/ 커맨드를 실행합니다., 커맨드 이름 = {}", name);
+        targetCommandHandler.handleCommand(event);
     }
 }
