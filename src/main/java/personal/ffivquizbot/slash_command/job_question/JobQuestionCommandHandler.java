@@ -11,18 +11,18 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.stereotype.Service;
 import personal.ffivquizbot.emojis.Emojis;
 import personal.ffivquizbot.event_waiter.EventWaiterProvider;
+import personal.ffivquizbot.slash_command.BaseSlashCommandHandler;
 import personal.ffivquizbot.slash_command.SlashCommandHandler;
 import personal.ffivquizbot.slash_command.SlashCommands;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JobQuestionCommandHandler implements SlashCommandHandler {
+public class JobQuestionCommandHandler extends BaseSlashCommandHandler implements SlashCommandHandler {
 
     private final JobQuestionProvider jobQuestionProvider;
 
@@ -82,6 +82,20 @@ public class JobQuestionCommandHandler implements SlashCommandHandler {
                                     },
                                     e -> { // Action
                                         String authorMessage = e.getMessage().getContentRaw();
+
+                                        if (authorMessage.equals(super.getCircuitBreakCommand())) {
+                                            log.info("중단 명령어 확인, 문제 출제를 중단합니다...");
+
+                                            int solvedCount = jobIndex;
+                                            targetChannel.sendMessage(Emojis.STOP.getEmojiString() + " 문제 출제를 중단합니다! " + Emojis.STOP.getEmojiString() +
+                                                    "\n총 풀이한 문제 수 : " + solvedCount + " / " + total + ", 정답률 : " + getCorrectRate(correctCount, total))
+                                                    .queue();
+
+                                            return;
+                                        }
+
+
+
                                         if (authorMessage.equals(jobToAsk.getJobName())) { // 정답
                                             log.info("정답! 정답 count를 높이고, 메시지를 전송합니다.");
 

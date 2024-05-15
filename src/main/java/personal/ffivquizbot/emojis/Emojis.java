@@ -18,7 +18,8 @@ public enum Emojis {
     SMILEY(":smiley:"),
     SLIGHT_SMILE(":slight_smile:"),
     PARTYING_FACE(":partying_face:"),
-    BOW(":person_bowing:");
+    BOW(":person_bowing:"),
+    STOP(":octagonal_sign:");
 
     private final String emojiString;
 
