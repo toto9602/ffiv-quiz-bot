@@ -28,6 +28,10 @@ public class JobQuestionCommandHandler extends BaseSlashCommandHandler implement
 
     private final EventWaiterProvider eventWaiterProvider;
 
+    public SlashCommands getCommand() {
+        return SlashCommands.JOB_QUESTION;
+    }
+
     public void handleCommand(SlashCommandInteractionEvent event) {
         OptionMapping questionCountOption = event.getOption("question_count");
         int questionCount = questionCountOption != null ? questionCountOption.getAsInt() : 19;
@@ -58,9 +62,7 @@ public class JobQuestionCommandHandler extends BaseSlashCommandHandler implement
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setImage(jobToAsk.getJobIconUrl())
-                    .setDescription("잡 문양");
-
-            System.out.println("파일 업로드 객체 생성");
+                    .setDescription("스킬 아이콘");
 
             String questionDescription = "[ " + Integer.valueOf(jobIndex+1).toString() + "번 문제" + " ]";
 
@@ -137,6 +139,7 @@ public class JobQuestionCommandHandler extends BaseSlashCommandHandler implement
                                     }
                             )
                     );
+            System.out.println("Sleep에 진입합니다?");
             sleep(1000);
             System.out.println("다음 문제로 진입!!!");
         } catch (Exception e) {

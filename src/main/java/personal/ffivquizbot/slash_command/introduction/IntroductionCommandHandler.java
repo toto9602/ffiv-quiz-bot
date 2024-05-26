@@ -12,6 +12,11 @@ import personal.ffivquizbot.slash_command.SlashCommands;
 @RequiredArgsConstructor
 @Slf4j
 public class IntroductionCommandHandler implements SlashCommandHandler {
+
+    public SlashCommands getCommand() {
+        return SlashCommands.INTRODUCTION;
+    }
+
     public void handleCommand(SlashCommandInteractionEvent event) {
         event.reply("안녕하세요! " + Emojis.HAND.getEmojiString() + " " + Emojis.HAND.getEmojiString() + "\n"
                 + "파판 챗봇 힐꺼비입니다! " + Emojis.BOW.getEmojiString() +"\n\n"
