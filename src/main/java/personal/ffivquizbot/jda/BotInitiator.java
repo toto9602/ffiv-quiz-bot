@@ -37,15 +37,19 @@ public class BotInitiator {
 
             CommandListUpdateAction commands = jda.updateCommands();
 
-            commands.addCommands(
-                    Commands.slash(SlashCommands.JOB_QUESTION.getCommandName(), SlashCommands.JOB_QUESTION.getDescription())
-                            .addOptions(SlashCommands.JOB_QUESTION.getOptions())
+            commands
+                    .addCommands(
+                            Commands.slash(SlashCommands.JOB_QUESTION.getCommandName(), SlashCommands.JOB_QUESTION.getDescription())
+                                    .addOptions(SlashCommands.JOB_QUESTION.getOptions())
 
-            ).addCommands(
-                    Commands.slash(SlashCommands.INTRODUCTION.getCommandName(), SlashCommands.INTRODUCTION.getDescription())
-            );
-
-            commands.queue();
+                    ).addCommands(
+                            Commands.slash(SlashCommands.INTRODUCTION.getCommandName(), SlashCommands.INTRODUCTION.getDescription())
+                    )
+                    .addCommands(
+                            Commands.slash(SlashCommands.ASTROLOGIAN.getCommandName(), SlashCommands.ASTROLOGIAN.getDescription())
+                                    .addOptions(SlashCommands.ASTROLOGIAN.getOptions())
+                    )
+                    .queue();
             log.info("Command 추가 완료!");
         } catch (Exception e) {
             log.error("봇 실행 과정에서 오류가 발생했습니다.");

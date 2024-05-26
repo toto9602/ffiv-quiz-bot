@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Service;
+import personal.ffivquizbot.slash_command.astrologian_skills.AstrologianSkillQuestionCommandHandler;
 import personal.ffivquizbot.slash_command.introduction.IntroductionCommandHandler;
 import personal.ffivquizbot.slash_command.job_question.JobQuestionCommandHandler;
 
@@ -18,13 +19,14 @@ public class SlashCommandListener extends ListenerAdapter {
 
     private final JobQuestionCommandHandler jobQuestionCommandHandler;
     private final IntroductionCommandHandler introductionCommandHandler;
+    private final AstrologianSkillQuestionCommandHandler astrologianSkillQuestionCommandHandler;
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         String name = event.getName();
 
-        SlashCommandHandler targetCommandHandler = Arrays.asList(jobQuestionCommandHandler, introductionCommandHandler).stream()
+        SlashCommandHandler targetCommandHandler = Arrays.asList(jobQuestionCommandHandler, introductionCommandHandler, astrologianSkillQuestionCommandHandler).stream()
                 .filter(slashCommandHandler -> slashCommandHandler.getCommand().getCommandName().equals(name))
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
