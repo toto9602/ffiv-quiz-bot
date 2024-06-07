@@ -2,6 +2,7 @@ package personal.ffivquizbot.slash_command.astrologian_skills;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.springframework.stereotype.Service;
 import personal.ffivquizbot.emojis.Emojis;
 import personal.ffivquizbot.event_waiter.EventWaiterProvider;
@@ -20,8 +22,9 @@ import personal.ffivquizbot.slash_command.SlashCommands;
 import personal.ffivquizbot.slash_command.astrologian_skills.enums.DrawSkills;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 
 @Service
@@ -52,11 +55,6 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
 
         sleep(4000);
 
-        // TODO : 삭제
-        for (DrawSkills job : randomJobList) {
-            System.out.println(job);
-        }
-
         processJobQuestion(event.getChannel(), event.getUser(), randomJobList, 0, questionCount, 0);
     }
 
@@ -66,23 +64,20 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
 
             EmbedBuilder embed = new EmbedBuilder()
                     .setImage(drawSkillToAsk.getSkillIconUrl())
-                    .setDescription("스킬 아이콘");
-
-            System.out.println("파일 업로드 객체 생성");
+                    .setDescription(drawSkillToAsk.getSkillName());
 
             String questionDescription = "[ " + Integer.valueOf(jobIndex+1).toString() + "번 문제" + " ]";
-            System.out.println("questionDescription = " + questionDescription);
 
-            SelectMenu menu = SelectMenu.create("Select")
-                    .setPlaceholder("높은 효과를 주는 직업군 / 맞는 징조를 골라주세요!")
-                    .addOption("근딜 & 방어 / 해의 징조", "근딜 & 방어 / 해의 징조")
-                    .addOption("원딜 & 회복 / 달의 징조", "원딜 & 회복 / 달의 징조")
-                    .addOption("근딜 & 방어 / 별의 징조", "근딜 & 방어 / 별의 징조")
-                    .addOption("근딜 & 방어 / 달의 징조", "근딜 & 방어 / 달의 징조")
-                    .addOption("문제 풀이를 중단합니다", "문제 풀이를 중단합니다.")
+            List<DrawSkills> randomListWithAnswer = getRandomListWithAnswer(drawSkillToAsk);
+            SelectMenu.Builder builder = SelectMenu.create("Select")
+                    .setPlaceholder("높은 효과를 주는 직업군 / 맞는 징조를 골라주세요!");
+
+            for (DrawSkills skill : randomListWithAnswer) {
+                builder.addOption(skill.getAnswer(), skill.getAnswer());
+            }
+
+            SelectMenu menu = builder.addOption("문제 풀이를 중단합니다.", "문제 풀이를 중단합니다.")
                     .build();
-
-            System.out.println("메시지를 전송합니다" + "[ " + Integer.valueOf(jobIndex+1).toString() + "번 문제" + " ]");
 
             targetChannel.sendMessage(questionDescription)
                     .setActionRow(menu)
@@ -91,25 +86,20 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
                             message -> eventWaiterProvider.getEventWaiter().waitForEvent(
                                     SelectMenuInteractionEvent.class,
                                     e -> { // Condition
-                                        System.out.println(e);
-                                        System.out.println("event의 조건을 조회합니다");
-                                        System.out.println(e.getUser());
-
                                         if (e.getUser().isBot()) {
                                             return false;
                                         }
                                         return e.getUser().equals(targetUser);
                                     },
                                     e -> { // Action
-                                        System.out.println("SelectMenuInteractionEvent를 수신했습니다" );
-                                        String selected = e.getMessage().toString();
-                                        System.out.println("selected" + selected);
+                                        List<SelectOption> selectedOptions = e.getSelectedOptions();
+                                        String selected = selectedOptions.get(0).getValue();
 
-                                        if (selected.equals(super.getCircuitBreakCommand())) {
+                                        if (selected.equals("문제 풀이를 중단합니다")) {
                                             log.info("중단 명령어 확인, 문제 출제를 중단합니다...");
 
                                             int solvedCount = jobIndex;
-                                            targetChannel.sendMessage(Emojis.STOP.getEmojiString() + " 문제 출제를 중단합니다! " + Emojis.STOP.getEmojiString() +
+                                            e.reply(Emojis.STOP.getEmojiString() + " 문제 출제를 중단합니다! " + Emojis.STOP.getEmojiString() +
                                                             "\n총 풀이한 문제 수 : " + solvedCount + " / " + total + ", 정답률 : " + getCorrectRate(correctCount, total))
                                                     .queue();
 
@@ -119,7 +109,8 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
                                         if (selected.equals(drawSkillToAsk.getAnswer())) { // 정답
                                             log.info("정답! 정답 count를 높이고, 메시지를 전송합니다.");
 
-                                            e.getTextChannel().sendMessage("정답입니다!!! " + Emojis.CLAP.getEmojiString() + " "  + Emojis.CLAP.getEmojiString()).queue();
+
+                                            e.reply("정답입니다!!! " + Emojis.CLAP.getEmojiString() + " "  + Emojis.CLAP.getEmojiString()).queue();
 
                                             int updatedCorrectCount = correctCount + 1;
 
@@ -133,7 +124,7 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
                                                 targetChannel.sendMessage("\n\n" + Emojis.PARTYING_FACE.getEmojiString() + " 모든 문제가 끝났습니다! " + Emojis.PARTYING_FACE.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(updatedCorrectCount, total)).queue();
                                             }
                                         } else { // 오답
-                                            e.getTextChannel().sendMessage("땡~! " + Emojis.WOMAN_X.getEmojiString() + " " + Emojis.WOMAN_X.getEmojiString() + " " + "정답은 [ " + drawSkillToAsk.getSkillName() + " ] 입니다!").queue();
+                                            e.reply("땡! " + Emojis.WOMAN_X.getEmojiString() + " " + Emojis.WOMAN_X.getEmojiString() + " " + "\n정답은 [ " + drawSkillToAsk.getAnswer() + " ] 입니다!").queue();
 
                                             if (!isLast(jobIndex, total)) {
                                                 log.info("문제가 남았습니다! 다음 문제를 출제합니다.");
@@ -143,16 +134,19 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
                                             } else {
                                                 // 출제 끝
                                                 targetChannel.sendMessage("\n\n" + Emojis.PARTYING_FACE.getEmojiString() + " 모든 문제가 끝났습니다! " + Emojis.PARTYING_FACE.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(correctCount, total)).queue();
+                                                return;
                                             }
                                         }
                                     },
-                                    10, TimeUnit.SECONDS,
+                                    20, TimeUnit.SECONDS,
                                     () -> { // Timeout Action
                                         log.info("TIMEOUT!" + drawSkillToAsk.getSkillName());
 
-                                        targetChannel.sendMessage(Emojis.CLOCK.getEmojiString() + " " + "시간 초과입니다!" + Emojis.CLOCK.getEmojiString() + " " + "정답은 [ " + drawSkillToAsk.getAnswer() +" ] ! :)").queue();
+                                        targetChannel.sendMessage(Emojis.CLOCK.getEmojiString() + " " + "시간 초과입니다!\n" + Emojis.CLOCK.getEmojiString() + " " + "정답은 [ " + drawSkillToAsk.getAnswer() +" ] ! :)").queue();
                                         if (isLast(jobIndex, total)) {
                                             System.out.println("출제를 종료합니다...");
+                                            targetChannel.sendMessage("\n\n" + Emojis.PARTYING_FACE.getEmojiString() + " 모든 문제가 끝났습니다! " + Emojis.PARTYING_FACE.getEmojiString() + "\n" + "정답률 : " + getCorrectRate(correctCount, total)).queue();
+
                                             return;
                                         }
 
@@ -191,6 +185,36 @@ public class AstrologianSkillQuestionCommandHandler  extends BaseSlashCommandHan
         double rate = (double) correctCount / (double) total;
 
         return percentFormat.format(rate);
+    }
+
+    private List<DrawSkills> getRandomListWithAnswer(DrawSkills answer) {
+        DrawSkills[] values = DrawSkills.values();
+        ArrayList<DrawSkills> drawSkills = new ArrayList<>(Arrays.asList(values));
+        Collections.shuffle(drawSkills);
+
+        DrawSkills[] optionCandidates = drawSkills.subList(0, 4).toArray(new DrawSkills[4]);
+
+        int answerIdx = IntStream.range(0, optionCandidates.length)
+                .filter(i -> optionCandidates[i].getSkillName().equals(answer.getSkillName()))
+                .findFirst()
+                .orElse(-1);
+
+        if (answerIdx != -1) {
+            System.out.println("랜덤 목록에 정답이 포함되어 있습니다." + answerIdx);
+            return Arrays.asList(optionCandidates);
+        }
+
+        // 없으면
+        System.out.println("랜덤 목록에 정답이 없습니다" + answerIdx);
+        System.out.println("정답 : " + answer.getAnswer());
+
+        ArrayList<DrawSkills> newOptionCandidates = new ArrayList<>(Arrays.asList(optionCandidates).subList(0, 3));
+
+        newOptionCandidates.add(answer);
+
+        Collections.shuffle(newOptionCandidates);
+
+        return newOptionCandidates;
     }
 
 }
