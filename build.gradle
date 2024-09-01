@@ -19,21 +19,20 @@ configurations {
 }
 
 repositories {
-	jcenter()
 	mavenCentral()
+	maven { url = "https://m2.chew.pro/snapshots/" }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation"net.dv8tion:JDA:5.0.0-alpha.11"
-	implementation 'com.jagrosh:jda-utilities:3.0.5'
+	implementation "net.dv8tion:JDA:5.0.0-alpha.11"
+	implementation "pw.chew:jda-chewtils:2.0-SNAPSHOT"
 	implementation 'ch.qos.logback:logback-classic:1.4.1'
 	implementation 'org.slf4j:slf4j-api:2.0.3'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
+// https://andre601.ch/blog/2024/04-22-using-jda-utils-eventwaiter/#__tabbed_1_2
 
 tasks.named('test') {
 	useJUnitPlatform()
