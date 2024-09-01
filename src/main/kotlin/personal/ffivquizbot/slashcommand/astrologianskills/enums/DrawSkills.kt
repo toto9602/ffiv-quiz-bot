@@ -1,11 +1,10 @@
 package personal.ffivquizbot.slashcommand.astrologianskills.enums
 
-import personal.ffivquizbot.slash_command.astrologian_skills.enums.DrawSkillTargets
 
 enum class DrawSkills(
     val skillName:String,
     val skillIconUrl:String,
-    val targets:DrawSkillTargets,
+    val target:DrawSkillTargets,
     val sign:DrawSigns,
 ) {
     BALANCE("아제마의 균형", "", DrawSkillTargets.DEFENSE_CLOSE, DrawSigns.SUN),

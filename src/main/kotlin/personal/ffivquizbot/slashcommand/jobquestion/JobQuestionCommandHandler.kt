@@ -217,7 +217,7 @@ class JobQuestionCommandHandler(
     private fun getCorrectRate(correctCount: Int, total: Int):String {
         val percentFormat = NumberFormat.getPercentInstance()
 
-        percentFormat.minimumIntegerDigits = 0
+        percentFormat.minimumFractionDigits = 0
         percentFormat.maximumFractionDigits = 2
 
         log.info("correctCount = $correctCount, total = $total")
