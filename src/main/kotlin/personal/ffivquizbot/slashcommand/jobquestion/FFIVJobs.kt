@@ -1,9 +1,9 @@
-package personal.ffivquizbot.slash_command.job_question;
+package personal.ffivquizbot.slashcommand.jobquestion
 
-import lombok.Getter;
-
-@Getter
-public enum FFIVJobs {
+enum class FFIVJobs(
+    val jobName:String,
+    val jobIconUrl:String,
+) {
     DARK_KNIGHT("암흑기사", ""),
     GUN_BREAKER("건브레이커", ""),
     PALADIN("나이트", ""),
@@ -24,15 +24,4 @@ public enum FFIVJobs {
     SAMURAI("사무라이", ""),
     SUMMONER("소환사", ""),
     BLUE_MAGE("청마도사", "");
-
-    private final String jobName;
-
-    private final String jobIconUrl;
-
-    FFIVJobs(String jobName, String jobIconUrl) {
-        this.jobName = jobName;
-        this.jobIconUrl = jobIconUrl;
-    }
-
 }
-
