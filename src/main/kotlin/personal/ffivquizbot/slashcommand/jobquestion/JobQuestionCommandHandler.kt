@@ -1,8 +1,8 @@
 package personal.ffivquizbot.slashcommand.jobquestion
 
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.slf4j.LoggerFactory
@@ -12,6 +12,8 @@ import personal.ffivquizbot.eventwaiter.EventWaiterProvider
 import personal.ffivquizbot.slashcommand.BaseSlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommands
+import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
+import personal.ffivquizbot.slashcommand.jobquestion.enums.JobIconFilePathBuilder
 import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit
 
 class JobQuestionCommandHandler(
     private val jobQuestionProvider:JobQuestionProvider,
+    private val jobIconFilePathBuilder: JobIconFilePathBuilder,
     private val eventWaiterProvider:EventWaiterProvider,
 ) : SlashCommandHandler, BaseSlashCommandHandler() {
     override val command = SlashCommands.JOB_QUESTION;
@@ -62,8 +65,10 @@ class JobQuestionCommandHandler(
         try {
             val jobToAsk = jobs.get(jobIndex)
 
+            val iconFilePath = jobIconFilePathBuilder.buildPath(jobToAsk)
+
             val embed = EmbedBuilder()
-                .setImage(jobToAsk.jobIconUrl)
+                .setImage(iconFilePath)
                 .setDescription("스킬 아이콘")
 
             val questionDescription = "[ ${(jobIndex + 1)}번 문제 ]"
@@ -77,7 +82,6 @@ class JobQuestionCommandHandler(
                             event.author.isBot == false && event.author == targetUser
                         },
                         { event: MessageReceivedEvent ->
-                            {
                                 val authorMsg = event.message.contentRaw
                                 if (authorMsg == super.circuitBreakCommand) {
                                     log.info("중단 명령어 확인, 문제 출제를 중단합니다..")
@@ -162,7 +166,7 @@ class JobQuestionCommandHandler(
                                 }
 
 
-                            }
+
                         },
                         10,
                         TimeUnit.SECONDS,

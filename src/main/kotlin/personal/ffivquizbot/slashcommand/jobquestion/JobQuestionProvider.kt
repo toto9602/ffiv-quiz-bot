@@ -1,6 +1,7 @@
 package personal.ffivquizbot.slashcommand.jobquestion
 
 import org.springframework.stereotype.Service
+import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
 
 @Service
 class JobQuestionProvider {
