@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import personal.ffivquizbot.eventwaiter.EventWaiterProvider
-import personal.ffivquizbot.slash_command.SlashCommandListener
-import personal.ffivquizbot.slash_command.SlashCommands
+import personal.ffivquizbot.slashcommand.SlashCommandListener
+import personal.ffivquizbot.slashcommand.SlashCommands
 import java.util.*
 
 @Service
@@ -31,19 +31,18 @@ class BotInitiator(
 
             val commands = jda.updateCommands()
 
-            commands
-                .addCommands(
-                    Commands.slash(SlashCommands.JOB_QUESTION.commandName, SlashCommands.JOB_QUESTION.description)
-                        .addOptions(SlashCommands.JOB_QUESTION.options)
+            val customCommands = SlashCommands.entries.toTypedArray()
 
-                ).addCommands(
-                    Commands.slash(SlashCommands.INTRODUCTION.commandName, SlashCommands.INTRODUCTION.description)
-                )
-                .addCommands(
-                    Commands.slash(SlashCommands.ASTROLOGIAN.commandName, SlashCommands.ASTROLOGIAN.description)
-                        .addOptions(SlashCommands.ASTROLOGIAN.options)
-                )
-                .queue()
+            customCommands.forEach { command ->
+                val commandToAdd = Commands.slash(command.commandName, command.description)
+
+                if (command.hasOptions) {
+                    commandToAdd.options.forEach {option -> commandToAdd.addOptions(option) }
+                }
+
+                commands.addCommands(commandToAdd)
+            }
+
             log.info("Command 추가 완료!")
         } catch (e: Exception) {
             log.error("봇 실행 과정에서 오류가 발생했습니다.")
@@ -54,7 +53,7 @@ class BotInitiator(
     private fun buildJDA(): JDA {
         return JDABuilder.create(
             botToken,
-            EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
+            EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT)
         )
             .addEventListeners(slashCommandListener)
             .addEventListeners(eventWaiterProvider.eventWaiter)
