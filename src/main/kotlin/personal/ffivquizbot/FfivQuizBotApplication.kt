@@ -1,14 +1,15 @@
-package personal.ffivquizbot;
+package personal.ffivquizbot
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 @SpringBootApplication
-public class FfivQuizBotApplication {
+open class FfivQuizBotApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FfivQuizBotApplication.class, args);
-	}
 }
+
+    fun main(args: Array<String>) {
+        runApplication<FfivQuizBotApplication>(*args)
+    }
+
+
