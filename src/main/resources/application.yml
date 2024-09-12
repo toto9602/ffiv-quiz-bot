@@ -3,5 +3,7 @@ spring:
     active: local # default
     include:
       - discord
+      - aws
+
 
 
