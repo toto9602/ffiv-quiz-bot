@@ -2,14 +2,14 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id "com.github.johnrengelman.shadow" version "7.0.0"
+	id 'com.gradleup.shadow' version '8.3.0'
+	id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'personal'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
 }
 
 configurations {
@@ -19,21 +19,30 @@ configurations {
 }
 
 repositories {
-	jcenter()
-	mavenCentral()
+	mavenCentral() // for transitive dependencies
+	// for JDA
+	maven {
+		name 'm2-dv8tion'
+		url 'https://m2.dv8tion.net/releases'
+	}
+	// For JDA-Chewtils
+	maven { url "https://m2.chew.pro/releases" }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation"net.dv8tion:JDA:5.0.0-alpha.11"
-	implementation 'com.jagrosh:jda-utilities:3.0.5'
+	implementation "net.dv8tion:JDA:5.1.0"
+	implementation "pw.chew:jda-chewtils:2.0"
 	implementation 'ch.qos.logback:logback-classic:1.4.1'
 	implementation 'org.slf4j:slf4j-api:2.0.3'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
+// https://andre601.ch/blog/2024/04-22-using-jda-utils-eventwaiter/#__tabbed_1_2
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+kotlin {
+	jvmToolchain(17)
 }

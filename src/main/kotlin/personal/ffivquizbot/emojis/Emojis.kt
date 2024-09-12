@@ -1,11 +1,6 @@
-package personal.ffivquizbot.emojis;
+package personal.ffivquizbot.emojis
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Getter
-public enum Emojis {
+enum class Emojis(val emojiString:String) {
     MAN_O(":man_gesturing_ok:"),
     MAN_X(":man_gesturing_no:"),
     WOMAN_O(":woman_gesturing_ok:"),
@@ -20,7 +15,5 @@ public enum Emojis {
     PARTYING_FACE(":partying_face:"),
     BOW(":person_bowing:"),
     STOP(":octagonal_sign:");
-
-    private final String emojiString;
-
 }
+
