@@ -22,7 +22,7 @@ class SlashCommandListener(
             jobQuestionCommandHandler,
             introductionCommandHandler,
             astrologianSkillQuestionCommandHandler
-        ).firstOrNull { handler -> handler.command.toString() == name }
+        ).firstOrNull { handler -> handler.command.commandName == name }
 
         if (handler == null) {
             throw IllegalArgumentException("지원하지 않는 명령어가 입력되었습니다, ${name}")
