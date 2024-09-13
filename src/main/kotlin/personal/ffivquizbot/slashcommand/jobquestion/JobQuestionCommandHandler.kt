@@ -19,7 +19,6 @@ import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
 @Service
-
 class JobQuestionCommandHandler(
     private val jobQuestionProvider:JobQuestionProvider,
     private val jobIconFilePathBuilder: JobIconFilePathBuilder,
@@ -29,12 +28,14 @@ class JobQuestionCommandHandler(
 
     private val log = LoggerFactory.getLogger(JobQuestionCommandHandler::class.java)
 
+    private val TOTAL_JOB_QUESTION_COUNT = 19;
+
     override fun handleCommand(event: SlashCommandInteractionEvent?) {
         if (event == null) return;
 
         val questionCountOption = event.getOption("question_count")
 
-        val questionCount = questionCountOption?.asInt ?: 19;
+        val questionCount = questionCountOption?.asInt ?: this.TOTAL_JOB_QUESTION_COUNT
 
         val randomJobList = jobQuestionProvider.getRandomJobList(questionCount)
 
@@ -165,9 +166,6 @@ class JobQuestionCommandHandler(
                                         }
                                     }
                                 }
-
-
-
                         },
                         10,
                         TimeUnit.SECONDS,

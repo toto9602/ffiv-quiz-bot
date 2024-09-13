@@ -27,12 +27,15 @@ class AstrologianSkillQuestionCommandHandler(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
+    private val TOTAL_ASTROLOGIAN_SKILL_COUNT = 6;
+
     override fun handleCommand(event: SlashCommandInteractionEvent?) {
         if (event == null) return;
 
         val questionCountOption = event.getOption("question_count")
 
-        val questionCount = questionCountOption?.asInt ?: 6
+        val questionCount = questionCountOption?.asInt ?: this.TOTAL_ASTROLOGIAN_SKILL_COUNT;
+
         val randomSkillList = this.skillQuestionProvider.getRandomSkillList(questionCount)
         val jobQuestionReply = "[ 점지 ] 관련 문제를 ${questionCount}개 출제할게요!\n" +
                 "5초 뒤 시작합니다! ${Emojis.ROCKET.emojiString} ${Emojis.ROCKET.emojiString}"
