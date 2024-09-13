@@ -14,6 +14,7 @@ import personal.ffivquizbot.slashcommand.SlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommands
 import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
 import personal.ffivquizbot.slashcommand.jobquestion.enums.JobIconFilePathBuilder
+import personal.ffivquizbot.slashcommand.questionutils.getCorrectRate
 import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
@@ -123,7 +124,7 @@ class JobQuestionCommandHandler(
                                             targetChannel
                                                 .sendMessage(
                                                     "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
-                                                        this.getCorrectRate(
+                                                        getCorrectRate(
                                                             updatedCorrectCount,
                                                             total
                                                         )
@@ -154,7 +155,7 @@ class JobQuestionCommandHandler(
                                             targetChannel
                                                 .sendMessage(
                                                     "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
-                                                        this.getCorrectRate(
+                                                        getCorrectRate(
                                                             correctCount,
                                                             total
                                                         )
@@ -193,9 +194,7 @@ class JobQuestionCommandHandler(
                     )
                 }
 
-            println("Sleep에 진입힙니다?")
             sleep(1000)
-            println("다음 문제로 진입!")
         } catch (e: Exception) {
             targetChannel
                 .sendMessage("메시지 전송 과정에서 오류가 발생했습니다.. ${Emojis.SMILING_TEAR.emojiString} 개발자를 추궁해 주세요...")
@@ -203,7 +202,6 @@ class JobQuestionCommandHandler(
             e.printStackTrace()
         }
     }
-
 
     private fun isLast(jobIndex: Int, total: Int):Boolean {
         return (jobIndex + 1) == total
@@ -217,19 +215,4 @@ class JobQuestionCommandHandler(
             e.printStackTrace()
         }
     }
-
-    private fun getCorrectRate(correctCount: Int, total: Int):String {
-        val percentFormat = NumberFormat.getPercentInstance()
-
-        percentFormat.minimumFractionDigits = 0
-        percentFormat.maximumFractionDigits = 2
-
-        log.info("correctCount = $correctCount, total = $total")
-
-        val rate = (correctCount.toDouble() / total.toDouble())
-
-        return percentFormat.format(rate)
-    }
-
-
 }

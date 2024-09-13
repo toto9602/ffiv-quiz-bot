@@ -13,6 +13,7 @@ import personal.ffivquizbot.eventwaiter.EventWaiterProvider
 import personal.ffivquizbot.slashcommand.SlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommands
 import personal.ffivquizbot.slashcommand.astrologianskills.enums.DrawSkills
+import personal.ffivquizbot.slashcommand.questionutils.getCorrectRate
 import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
@@ -92,13 +93,7 @@ class AstrologianSkillQuestionCommandHandler(
                             { event ->
 
                             val selectedOptions = event.interaction.values.first()
-                                println("selectedOption = ${selectedOptions}")
 
-                                println("toAnswer = ${toAnswer(drawSkillToAsk)}")
-
-                                println("정답일까요? = ${selectedOptions == toAnswer(drawSkillToAsk)}")
-
-//                            val selected = selectedOptions[0].value
 
                             if (selectedOptions == "문제 풀이를 중단합니다") {
                                 log.info("중단 명령어 확인, 문제 출제를 중단합니다...")
@@ -107,7 +102,7 @@ class AstrologianSkillQuestionCommandHandler(
                                 event.reply(
                                     "${Emojis.STOP.emojiString} 문제 풀이를 중단합니다! ${Emojis.STOP.emojiString}\n" +
                                             "총 풀이한 문제 수 : ${solvedCount} / ${total}, 정답률 : ${
-                                                this.getCorrectRate(
+                                                getCorrectRate(
                                                     correctCount,
                                                     total
                                                 )
@@ -140,7 +135,7 @@ class AstrologianSkillQuestionCommandHandler(
                                     // 출제 끝
                                     targetChannel.sendMessage(
                                         "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
-                                                "정답률 : ${this.getCorrectRate(updatedCorrectCount, total)}"
+                                                "정답률 : ${getCorrectRate(updatedCorrectCount, total)}"
                                     )
                                         .queue()
                                 }
@@ -169,7 +164,7 @@ class AstrologianSkillQuestionCommandHandler(
                                     // 출제 끝
                                     targetChannel.sendMessage(
                                         "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
-                                                "정답률 : ${this.getCorrectRate(correctCount, total)}"
+                                                "정답률 : ${getCorrectRate(correctCount, total)}"
                                     )
                                         .queue()
                                 }
@@ -185,9 +180,8 @@ class AstrologianSkillQuestionCommandHandler(
                         .queue()
 
                         if (this.isLast(jobIndex, total)) {
-                            println("출제를 종료합니다...")
                             targetChannel.sendMessage("\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
-                                    "정답률 : ${this.getCorrectRate(correctCount, total)}")
+                                    "정답률 : ${getCorrectRate(correctCount, total)}")
                                 .queue()
                         } else {
                             val updatedJobIndex = jobIndex + 1
@@ -204,7 +198,6 @@ class AstrologianSkillQuestionCommandHandler(
                 })
                 }
         } catch (e: Exception) {
-            println("exception")
             println(e.printStackTrace())
             targetChannel
                 .sendMessage("메시지 전송 과정에서 오류가 발생했습니다.. ${Emojis.SMILING_TEAR.emojiString} 개발자를 추궁해 주세요...")
@@ -228,20 +221,6 @@ class AstrologianSkillQuestionCommandHandler(
         }
     }
 
-    private fun getCorrectRate(correctCount:Int, total:Int):String {
-        val percentFormat = NumberFormat.getPercentInstance()
-
-        percentFormat.minimumFractionDigits = 0
-        percentFormat.maximumFractionDigits = 2
-
-        log.info("correctCount = {}", correctCount)
-        log.info("total = {}", total)
-
-        val rate = correctCount.toDouble() / total.toDouble()
-
-        return percentFormat.format(rate)
-    }
-
     private fun getRandomListWithAnswer(answer: DrawSkills):List<DrawSkills> {
         val drawSkills = DrawSkills.values().toMutableList()
         drawSkills.shuffle()
@@ -251,7 +230,6 @@ class AstrologianSkillQuestionCommandHandler(
         val answerIdx = optionCandidates.indexOfFirst { it.skillName == answer.skillName }
 
         return if (answerIdx != -1) {
-            println("랜덤 목록에 정답이 포함되어 있습니다. ${answerIdx}")
             optionCandidates.toList()
         } else {
             val newOptionCandidates = optionCandidates.take(3).toMutableList()
