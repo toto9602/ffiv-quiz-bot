@@ -1,7 +1,9 @@
-package personal.ffivquizbot.slashcommand.jobquestion.enums
+package personal.ffivquizbot.slashcommand.jobquestion
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
+import personal.ffivquizbot.slashcommand.jobquestion.enums.JobCategory
 
 @Service
 class JobIconFilePathBuilder(
