@@ -13,9 +13,7 @@ import personal.ffivquizbot.slashcommand.BaseSlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommands
 import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
-import personal.ffivquizbot.slashcommand.jobquestion.enums.JobIconFilePathBuilder
 import personal.ffivquizbot.slashcommand.questionutils.getCorrectRate
-import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
 @Service

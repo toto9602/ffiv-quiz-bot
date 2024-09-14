@@ -36,8 +36,8 @@ class BotInitiator(
             customCommands.forEach { command ->
                 val commandToAdd = Commands.slash(command.commandName, command.description)
 
-                if (command.hasOptions) {
-                    commandToAdd.options.forEach {option -> commandToAdd.addOptions(option) }
+                if (command.optionList != null) {
+                    command.optionList.forEach { option -> commandToAdd.addOptions(option) }
                 }
 
                 commands.addCommands(commandToAdd)
