@@ -22,7 +22,7 @@ class JobIconFilePathBuilder(
             JobCategory.DPS -> "dps"
             JobCategory.TANK -> "tank"
             JobCategory.LIMITED -> "limited"
-            JobCategory.HEAL -> "heal"
+            JobCategory.HEAL -> "healer"
         }
     }
 }

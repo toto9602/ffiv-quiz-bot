@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import okhttp3.internal.immutableListOf
 
+
 enum class SlashCommands(
     val commandName:String,
     val description:String,
