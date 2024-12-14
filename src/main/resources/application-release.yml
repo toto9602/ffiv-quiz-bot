@@ -1,0 +1,5 @@
+aws:
+  basePath: ${AWS_BASE_PATH}
+
+discord:
+  botToken: ${DISCORD_BOT_TOKEN}
