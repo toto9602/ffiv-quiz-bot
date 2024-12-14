@@ -29,20 +29,22 @@ class BotInitiator(
             val jda = buildJDA()
             log.info("봇을 실행합니다, jda status = {}", jda.status)
 
-            val commands = jda.updateCommands()
-
-            val customCommands = SlashCommands.entries.toTypedArray()
-
-            customCommands.forEach { command ->
-                val commandToAdd = Commands.slash(command.commandName, command.description)
-
-                if (command.optionList != null) {
-                    command.optionList.forEach { option -> commandToAdd.addOptions(option) }
-                }
-
-                commands.addCommands(commandToAdd)
-            }
-
+            jda.updateCommands()
+                .addCommands(
+                    Commands.slash(SlashCommands.INTRODUCTION.commandName, SlashCommands.INTRODUCTION.description)
+                )
+                .addCommands(
+                    Commands.slash(SlashCommands.JOB_QUESTION.commandName, SlashCommands.JOB_QUESTION.description)
+                        .addOptions(SlashCommands.JOB_QUESTION.optionList?.get(0))
+                )
+                .addCommands(
+                    Commands.slash(SlashCommands.ASTROLOGIAN.commandName, SlashCommands.ASTROLOGIAN.description)
+                        .addOptions(SlashCommands.ASTROLOGIAN.optionList?.get(0))
+                )
+                .addCommands(
+                    Commands.slash(SlashCommands.INVINCIBILITY.commandName, SlashCommands.INVINCIBILITY.description)
+                        .addOptions(SlashCommands.INVINCIBILITY.optionList?.get(0))
+                ).queue()
             log.info("Command 추가 완료!")
         } catch (e: Exception) {
             log.error("봇 실행 과정에서 오류가 발생했습니다.")
