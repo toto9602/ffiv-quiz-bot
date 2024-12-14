@@ -64,13 +64,15 @@ class InvincibilityQuestionCommandHandler(
         correctCount: Int
     ) {
         try {
+            sleep(1500)
+
             val skillToAsk = skills.get(idx)
 
             val iconFilePath = skillIconFilePathBuilder.buildPath(skillToAsk)
 
             val embed = EmbedBuilder()
                 .setImage(iconFilePath)
-                .setDescription("[ ${skillToAsk.job}] ${skillToAsk.skillName} ")
+                .setDescription(skillToAsk.description)
 
             val questionDescription = "[ ${idx + 1}번 문제 ] "
 
@@ -78,10 +80,11 @@ class InvincibilityQuestionCommandHandler(
             skillList.shuffle()
 
             val builder = StringSelectMenu.create("Select")
-                .setPlaceholder("스킬에 대한 올바른 설명을 골라주세요!")
+                .setPlaceholder("설명에 맞는 스킬을 골라주세요!")
 
             for (skill in skillList) {
-                builder.addOption(skill.description, skill.description)
+                val answerFormat = toAnswer(skill)
+                builder.addOption(answerFormat, answerFormat)
             }
 
             val menu = builder.addOption("문제 풀이를 중단합니다.", "문제 풀이를 중단합니다.")
@@ -113,10 +116,10 @@ class InvincibilityQuestionCommandHandler(
                                 .queue()
 
 
-                        } else if (selectedOptions == skillToAsk.description) {
+                        } else if (selectedOptions ==toAnswer(skillToAsk)) {
                             log.info("정답! 정답 count를 높이고, 메시지를 전송합니다")
 
-                            event.reply("정답입니다! ${Emojis.CLAP.emojiString} ${Emojis.CLAP.emojiString}")
+                            event.reply("정답입니다! ${Emojis.CLAP.emojiString} ${Emojis.CLAP.emojiString}\n\n")
                                 .queue()
 
                             val updatedCorrectCount = correctCount + 1
@@ -136,7 +139,7 @@ class InvincibilityQuestionCommandHandler(
                             } else {
                                 // 출제 끝
                                 targetChannel.sendMessage(
-                                    "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
+                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
                                             "정답률 : ${getCorrectRate(updatedCorrectCount, total)}"
                                 )
                                     .queue()
@@ -145,7 +148,7 @@ class InvincibilityQuestionCommandHandler(
                             // 오답
                             event.reply(
                                 "땡! ${Emojis.WOMAN_X.emojiString} ${Emojis.WOMAN_X.emojiString}\n " +
-                                        "정답은 아래 설명입니다!\n'${skillToAsk.description}'"
+                                        "정답은 ${toAnswer(skillToAsk)} 입니다!\n\n"
                             )
                                 .queue()
 
@@ -165,7 +168,7 @@ class InvincibilityQuestionCommandHandler(
                             } else {
                                 // 출제 끝
                                 targetChannel.sendMessage(
-                                    "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
+                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
                                             "정답률 : ${getCorrectRate(correctCount, total)}"
                                 )
                                     .queue()
@@ -178,11 +181,11 @@ class InvincibilityQuestionCommandHandler(
                         log.info("TIMEOUT! ${skillToAsk.skillName}" )
 
                         targetChannel.sendMessage("${Emojis.CLOCK.emojiString} 시간 초과입니다!\n" +
-                                "${Emojis.CLOCK.emojiString} 정답은 아래 설명입니다! \n'${skillToAsk.description}'")
+                                "${Emojis.CLOCK.emojiString} 정답은 ${toAnswer(skillToAsk)} 입니다!")
                             .queue()
 
                         if (this.isLast(idx, total)) {
-                            targetChannel.sendMessage("\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
+                            targetChannel.sendMessage("================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
                                     "정답률 : ${getCorrectRate(correctCount, total)}")
                                 .queue()
                         } else {
@@ -209,6 +212,10 @@ class InvincibilityQuestionCommandHandler(
     }
 
     private fun isLast(jobIndex: Int, total: Int): Boolean = (jobIndex + 1) == total
+
+    private fun toAnswer(skill: InvincibilitySkills): String {
+        return "${skill.job} - ${skill.skillName}"
+    }
 
     private fun sleep(milliseconds: Int) {
         try {
