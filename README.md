@@ -17,6 +17,10 @@ Last Updated : 2024.09.12c
 
 ### /점지 {questionCount}
 - FF-IV 인게임 내 [ 점지 ] 스킬 관련 문항을 questionCount 개만큼 출제합니다.
+
+### /무적 {questionCount}
+- FF-IV 인게임 내 탱커의 무적기 관련 문항을 questionCount 개만큼 출제합니다.
+
 ### 중단!
 - 진행 중이던 문제 풀이를 즉시 중단합니다.
 ## Core Dependencies

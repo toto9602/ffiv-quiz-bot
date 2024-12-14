@@ -64,6 +64,7 @@ class AstrologianSkillQuestionCommandHandler(
         correctCount: Int
     ) {
         try {
+            sleep(1500)
             val drawSkillToAsk = drawSkills.get(jobIndex)
 
             val iconFilePath = skillIconFilePathBuilder.buildPath(drawSkillToAsk)
@@ -136,8 +137,10 @@ class AstrologianSkillQuestionCommandHandler(
                                     )
                                 } else {
                                     // 출제 끝
+                                    sleep(1000)
+
                                     targetChannel.sendMessage(
-                                        "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
+                                        "==================================\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
                                                 "정답률 : ${getCorrectRate(updatedCorrectCount, total)}"
                                     )
                                         .queue()
@@ -146,7 +149,7 @@ class AstrologianSkillQuestionCommandHandler(
                                 // 오답
                                 event.reply(
                                     "땡! ${Emojis.WOMAN_X.emojiString} ${Emojis.WOMAN_X.emojiString}\n " +
-                                            "정답은 [ ${drawSkillToAsk.target.name} ] 입니다!"
+                                            "정답은 [ ${toAnswer(drawSkillToAsk)} ] 입니다!"
                                 )
                                     .queue()
 
@@ -166,7 +169,7 @@ class AstrologianSkillQuestionCommandHandler(
                                 } else {
                                     // 출제 끝
                                     targetChannel.sendMessage(
-                                        "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
+                                        "==================================\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString} \n" +
                                                 "정답률 : ${getCorrectRate(correctCount, total)}"
                                     )
                                         .queue()
@@ -179,11 +182,11 @@ class AstrologianSkillQuestionCommandHandler(
                         log.info("TIMEOUT! ${drawSkillToAsk.skillName}" )
 
                     targetChannel.sendMessage("${Emojis.CLOCK.emojiString} 시간 초과입니다!\n" +
-                            "${Emojis.CLOCK.emojiString} 정답은 [ ${drawSkillToAsk.target.name} ] ! :)")
+                            "${Emojis.CLOCK.emojiString} 정답은 [ ${toAnswer(drawSkillToAsk)} ] ! :)")
                         .queue()
 
                         if (this.isLast(jobIndex, total)) {
-                            targetChannel.sendMessage("\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
+                            targetChannel.sendMessage("================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n" +
                                     "정답률 : ${getCorrectRate(correctCount, total)}")
                                 .queue()
                         } else {

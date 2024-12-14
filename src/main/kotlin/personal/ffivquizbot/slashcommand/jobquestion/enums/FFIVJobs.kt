@@ -15,7 +15,7 @@ enum class FFIVJobs(
     WHITE_MAGE("백마도사", "WhiteMage.png", JobCategory.HEAL),
     BARD("음유시인", "Bard.png", JobCategory.DPS),
     BLACK_MAGE("흑마도사", "BlackMage.png", JobCategory.DPS),
-    DANCER("무도가", "Danger.png", JobCategory.DPS),
+    DANCER("무도가", "Dancer.png", JobCategory.DPS),
     DRAGOON("용기사", "Dragoon.png", JobCategory.DPS),
     MACHINIST("기공사", "Machinist.png", JobCategory.DPS),
     MONK("몽크", "Monk.png", JobCategory.DPS),

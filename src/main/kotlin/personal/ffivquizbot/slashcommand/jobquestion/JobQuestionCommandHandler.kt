@@ -13,9 +13,7 @@ import personal.ffivquizbot.slashcommand.BaseSlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommandHandler
 import personal.ffivquizbot.slashcommand.SlashCommands
 import personal.ffivquizbot.slashcommand.jobquestion.enums.FFIVJobs
-import personal.ffivquizbot.slashcommand.jobquestion.enums.JobIconFilePathBuilder
 import personal.ffivquizbot.slashcommand.questionutils.getCorrectRate
-import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -124,7 +122,7 @@ class JobQuestionCommandHandler(
                                             // 출제 끝
                                             targetChannel
                                                 .sendMessage(
-                                                    "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
                                                         getCorrectRate(
                                                             updatedCorrectCount,
                                                             total
@@ -136,7 +134,7 @@ class JobQuestionCommandHandler(
 
                                     } else {
                                         // 오답
-                                        targetChannel.sendMessage("땡~! ${Emojis.WOMAN_X.emojiString} ${Emojis.WOMAN_X.emojiString} 정답은 [ ${jobToAsk.jobName} ] 입니다!")
+                                        targetChannel.sendMessage("땡~! ${Emojis.WOMAN_X.emojiString} ${Emojis.WOMAN_X.emojiString} 정답은 [ ${jobToAsk.jobName} ] 입니다!").queue()
 
                                         if (!isLast(jobIndex, total)) {
                                             log.info("문제가 남았습니다! 다음 문제를 출제합니다.")
@@ -155,7 +153,7 @@ class JobQuestionCommandHandler(
                                             // 출제 끝
                                             targetChannel
                                                 .sendMessage(
-                                                    "\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
                                                         getCorrectRate(
                                                             correctCount,
                                                             total
@@ -187,6 +185,17 @@ class JobQuestionCommandHandler(
                                         total = total,
                                         correctCount = correctCount
                                     )
+                                } else {
+                                    targetChannel
+                                        .sendMessage(
+                                            "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                                getCorrectRate(
+                                                    correctCount,
+                                                    total
+                                                )
+                                            }"
+                                        )
+                                        .queue()
                                 }
                             }
                     )
