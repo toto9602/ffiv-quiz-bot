@@ -122,7 +122,7 @@ class JobQuestionCommandHandler(
                                             // 출제 끝
                                             targetChannel
                                                 .sendMessage(
-                                                    "- - - - - - - - - - - - - - - - -\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
                                                         getCorrectRate(
                                                             updatedCorrectCount,
                                                             total
@@ -153,7 +153,7 @@ class JobQuestionCommandHandler(
                                             // 출제 끝
                                             targetChannel
                                                 .sendMessage(
-                                                    "- - - - - - - - - - - - - - - - -\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                                    "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
                                                         getCorrectRate(
                                                             correctCount,
                                                             total
@@ -188,7 +188,7 @@ class JobQuestionCommandHandler(
                                 } else {
                                     targetChannel
                                         .sendMessage(
-                                            "- - - - - - - - - - - - - - - - -\n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
+                                            "================================== \n\n ${Emojis.PARTYING_FACE.emojiString} 모든 문제가 끝났습니다! ${Emojis.PARTYING_FACE.emojiString}\n 정답률 : ${
                                                 getCorrectRate(
                                                     correctCount,
                                                     total
